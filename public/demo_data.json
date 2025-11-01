@@ -1,0 +1,134 @@
+{
+  "user": {
+    "id": "demo-user",
+    "email": "demo@cadscribe.app",
+    "name": "Demo User",
+    "avatar": "/avatars/demo-user.png"
+  },
+  "projects": [
+    {
+      "id": "project-1",
+      "name": "Parametric Enclosure",
+      "description": "Custom electronics enclosure with mounting holes",
+      "engine": "cadquery",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "updatedAt": "2024-01-15T14:20:00Z",
+      "parameters": {
+        "width": 100,
+        "height": 60,
+        "depth": 40,
+        "wallThickness": 2,
+        "holeDiameter": 3
+      },
+      "messages": [
+        {
+          "id": "msg-1",
+          "role": "user",
+          "content": "Create a rectangular enclosure with mounting holes",
+          "timestamp": "2024-01-15T10:30:00Z"
+        },
+        {
+          "id": "msg-2",
+          "role": "assistant",
+          "content": "I'll create a parametric enclosure for you. The design includes mounting holes and is fully customizable.",
+          "timestamp": "2024-01-15T10:31:00Z",
+          "codeGenerated": true
+        }
+      ],
+      "models": [
+        {
+          "id": "model-1",
+          "version": 1,
+          "previewUrl": "/files/placeholder_cube.stl",
+          "createdAt": "2024-01-15T10:31:00Z"
+        }
+      ]
+    },
+    {
+      "id": "project-2", 
+      "name": "Gear Assembly",
+      "description": "Planetary gear system",
+      "engine": "openscad",
+      "createdAt": "2024-01-12T09:15:00Z",
+      "updatedAt": "2024-01-14T16:45:00Z",
+      "parameters": {
+        "teeth": 20,
+        "module": 2,
+        "thickness": 5,
+        "shaftDiameter": 6
+      },
+      "messages": [
+        {
+          "id": "msg-3",
+          "role": "user", 
+          "content": "Design a planetary gear system",
+          "timestamp": "2024-01-12T09:15:00Z"
+        }
+      ],
+      "models": [
+        {
+          "id": "model-2",
+          "version": 1,
+          "previewUrl": "/files/placeholder_flange.stl",
+          "createdAt": "2024-01-12T09:20:00Z"
+        }
+      ]
+    }
+  ],
+  "engines": [
+    {
+      "id": "cadquery",
+      "name": "CadQuery",
+      "description": "Python-based parametric modeling",
+      "template": "import cadquery as cq\n\n# Create a box\nresult = cq.Workplane('XY').box(10, 10, 10)\n\n# Export\nshow_object(result)"
+    },
+    {
+      "id": "openscad",
+      "name": "OpenSCAD", 
+      "description": "Functional programming for 3D modeling",
+      "template": "// OpenSCAD template\nmodule box(width, height, depth) {\n    cube([width, height, depth], center=true);\n}\n\nbox(10, 10, 10);"
+    },
+    {
+      "id": "freecad",
+      "name": "FreeCAD",
+      "description": "Python scripting for FreeCAD",
+      "template": "import FreeCAD\nimport Part\n\n# Create a box\nbox = Part.makeBox(10, 10, 10)\nFreeCAD.ActiveDocument.addObject('Part::Feature', 'Box').Shape = box"
+    },
+    {
+      "id": "jscad",
+      "name": "JSCAD",
+      "description": "JavaScript Computational Design",
+      "template": "const { cube } = require('@jscad/modeling').primitives\n\nconst main = () => {\n  return cube({ size: 10 })\n}\n\nmodule.exports = { main }"
+    }
+  ],
+  "materials": [
+    {
+      "id": "steel",
+      "name": "Steel",
+      "color": "#8C9196",
+      "metalness": 0.8,
+      "roughness": 0.2
+    },
+    {
+      "id": "aluminum", 
+      "name": "Aluminum",
+      "color": "#D4D7DD",
+      "metalness": 0.9,
+      "roughness": 0.1
+    },
+    {
+      "id": "abs",
+      "name": "ABS Plastic",
+      "color": "#2563EB",
+      "metalness": 0.0,
+      "roughness": 0.6
+    },
+    {
+      "id": "pla",
+      "name": "PLA Plastic", 
+      "color": "#F97316",
+      "metalness": 0.0,
+      "roughness": 0.5
+    }
+  ]
+}
