@@ -444,9 +444,25 @@ export const ThreeViewer = ({
       scene.remove(modelRef.current);
     }
     
-    // Clear wireframe reference
+    // Clear wireframe reference and reset state
     wireframeMeshRef.current = null;
-    console.log('🔍 Cleared wireframe reference');
+    console.log('🔍 Cleared wireframe reference and model state');
+    
+    // Force clear any lingering wireframe meshes in the scene
+    const wireframesToRemove = [];
+    scene.traverse((child) => {
+      if (child.name === 'LoadedModelWireframe') {
+        wireframesToRemove.push(child);
+      }
+    });
+    wireframesToRemove.forEach(wireframe => {
+      if (wireframe.parent) {
+        wireframe.parent.remove(wireframe);
+      }
+    });
+    if (wireframesToRemove.length > 0) {
+      console.log(`🔍 Removed ${wireframesToRemove.length} lingering wireframe meshes`);
+    }
 
     // Extract file extension from URL, handling S3 pre-signed URLs with query parameters
     const urlWithoutParams = url.split('?')[0]; // Remove query parameters
@@ -575,22 +591,18 @@ export const ThreeViewer = ({
             modelRef.current = group;
             scene.add(group);
             
-            // Immediately set wireframe visibility based on current state
-            wireframeMesh.visible = showWireframe;
-            console.log(`🔍 Wireframe visibility set immediately: ${showWireframe}`);
-            
-            // Also force update the wireframe visibility system
+            // Ensure wireframe visibility is set correctly after loading
             setTimeout(() => {
               if (wireframeMeshRef.current) {
                 wireframeMeshRef.current.visible = showWireframe;
-                console.log(`🔍 Wireframe visibility confirmed after load: ${showWireframe}`);
+                console.log(`🔍 Wireframe visibility set to: ${showWireframe} after STL load`);
                 
-                // Force a render to ensure changes are visible
+                // Force a render to ensure visibility change is applied
                 if (sceneRef.current && renderer) {
                   renderer.render(sceneRef.current, camera);
                 }
               }
-            }, 50);
+            }, 100);
             
             console.log('🔍 Model added to scene with wireframe overlay, calling fitToView...');
             
@@ -739,11 +751,18 @@ export const ThreeViewer = ({
             object.userData.wireframeMeshes = wireframeMeshes;
             console.log(`🔍 Created ${wireframeMeshes.length} wireframe meshes for OBJ`);
             
-            // Immediately set wireframe visibility for all wireframes
-            wireframeMeshes.forEach(wireframe => {
-              wireframe.visible = showWireframe;
-            });
-            console.log(`🔍 OBJ wireframe visibility set immediately: ${showWireframe}`);
+            // Ensure wireframe visibility is set correctly after loading
+            setTimeout(() => {
+              wireframeMeshes.forEach(wireframe => {
+                wireframe.visible = showWireframe;
+              });
+              console.log(`🔍 Wireframe visibility set to: ${showWireframe} after OBJ load`);
+              
+              // Force a render to ensure visibility change is applied
+              if (sceneRef.current && renderer) {
+                renderer.render(sceneRef.current, camera);
+              }
+            }, 100);
           }
 
           object.name = 'LoadedModel';
@@ -757,22 +776,6 @@ export const ThreeViewer = ({
           
           modelRef.current = object;
           scene.add(object);
-          
-          // Force update wireframe visibility after adding to scene
-          setTimeout(() => {
-            if (wireframeMeshes.length > 0) {
-              wireframeMeshes.forEach(wireframe => {
-                wireframe.visible = showWireframe;
-              });
-              console.log(`🔍 OBJ wireframe visibility confirmed after load: ${showWireframe}`);
-              
-              // Force a render to ensure changes are visible
-              if (sceneRef.current && renderer) {
-                renderer.render(sceneRef.current, camera);
-              }
-            }
-          }, 50);
-          
           fitToView();
         },
         undefined,
@@ -1112,20 +1115,19 @@ export const ThreeViewer = ({
         // Store wireframe reference for toggle
         wireframeMeshRef.current = wireframeMesh;
         console.log('🔍 STEP wireframe mesh reference stored:', wireframeMesh);
-        console.log(`🔍 STEP wireframe visibility set immediately: ${showWireframe}`);
         
-        // Force update wireframe visibility after adding to scene
+        // Ensure wireframe visibility is set correctly after loading
         setTimeout(() => {
           if (wireframeMeshRef.current) {
             wireframeMeshRef.current.visible = showWireframe;
-            console.log(`🔍 STEP wireframe visibility confirmed after load: ${showWireframe}`);
+            console.log(`🔍 Wireframe visibility set to: ${showWireframe} after STEP load`);
             
-            // Force a render to ensure changes are visible
+            // Force a render to ensure visibility change is applied
             if (sceneRef.current && renderer) {
               renderer.render(sceneRef.current, camera);
             }
           }
-        }, 50);
+        }, 100);
 
         console.log("✅ STEP file converted and mesh added to scene (robust path).");
 
